@@ -1,56 +1,41 @@
-def give_bmi(height: list[int | float], weight: list[int | float]) -> list[int | float]:
+def give_bmi(height: list[int | float],
+             weight: list[int | float]) -> list[int | float]:
     """
-    Calculate the Body Mass Index (BMI) for each pair of height and weight.
-
+    Calculate BMI for each pair of height and weight.
     Args:
-        height (list[int | float]): A list of heights in meters.
-        weight (list[int | float]): A list of weights in kilograms.
-
+        height (list[int | float]): Heights in meters.
+        weight (list[int | float]): Weights in kg.
     Returns:
-        list[int | float]: A list of calculated BMI values.
-
+        list[int | float]: Calculated BMI values.
     Raises:
-        ValueError: If the lengths of the height and weight lists do not match.
-        TypeError: If any element in the height or weight lists is not an int or float.
+        ValueError: If lengths of height and weight lists do not match.
+        TypeError: If any element in lists is not int or float.
     """
     if len(height) != len(weight):
-        raise ValueError("The lengths of the height and weight lists do not match.")
+        raise ValueError("Height and weight lists must be of same length.")
     for h in height:
         if not isinstance(h, (int, float)):
-            raise TypeError("All elements in the height list must be int or float.")
+            raise TypeError("Height list elements must be int or float.")
     for w in weight:
         if not isinstance(w, (int, float)):
-            raise TypeError("All elements in the weight list must be int or float.")
-    bmi_list = []
-    for h, w in zip(height, weight):
-        bmi = w / (h ** 2)
-        bmi_list.append(bmi)
-    return bmi_list
+            raise TypeError("Weight list elements must be int or float.")
+    return [w / (h ** 2) for h, w in zip(height, weight)]
+
 
 def apply_limit(bmi: list[int | float], limit: int) -> list[bool]:
     """
-    Apply a limit to the BMI values to determine if they exceed the specified limit.
-
+    Check if BMI values exceed the limit.
     Args:
-    try:
-        for b in bmi:
-            if not isinstance(b, (int, float)):
-                raise TypeError("All elements in the bmi list must be int or float.")
-        if not isinstance(limit, int):
-            raise TypeError("The limit must be an int.")
-        return [b > limit for b in bmi]
-    except Exception as e:
-        print(f"AssertionError: {e}")
-        return []
-
+        bmi (list[int | float]): BMI values.
+        limit (int): Limit to compare against.
+    Returns:
+        list[bool]: True if BMI exceeds limit, else False.
     Raises:
-        TypeError: If any element in the bmi list is not an int or float, or if limit is not an int.
+        TypeError: If element in list or limit is not int or float.
     """
     for b in bmi:
         if not isinstance(b, (int, float)):
-            raise TypeError("All elements in the bmi list must be int or float.")
+            raise TypeError("BMI list elements must be int or float.")
     if not isinstance(limit, int):
-        raise TypeError("The limit must be an int.")
+        raise TypeError("Limit must be an int.")
     return [b > limit for b in bmi]
-
-
