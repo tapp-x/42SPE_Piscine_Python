@@ -1,4 +1,3 @@
-from load_image import ft_load
 from PIL import Image
 import numpy as np
 import os
@@ -37,6 +36,23 @@ def print_tab(tab, channels):
         count += 1
 
 
+def print_tab_row(tab):
+    """
+    Print a formatted display of the first and last elements
+    For the first row of a given array,
+    print the 3 first and 3 last elements separate with "..."
+    Do the same for the last row.
+
+    Parameters:
+    tab (list): The array to display.
+    """
+    print(f"[[{tab[0][0]} {tab[0][1]} {tab[0][2]} ... \
+{tab[0][-3]} {tab[0][-2]} {tab[0][-1]}]]")
+    print(" ...")
+    print(f"[[{tab[-1][0]} {tab[-1][1]} {tab[-1][2]} ... \
+{tab[-1][-3]} {tab[-1][-2]} {tab[-1][-1]}]]")
+
+
 def main():
     """
     A program that should load the image "animal.jpeg", print some information
@@ -51,16 +67,15 @@ def main():
         if not os.path.exists(path):
             raise AssertionError("File not found:", path)
         img = Image.open(path)
-        ft_load("animal.jpeg")
-        print("Original shape: ", img.size)
-        print_tab(np.array(img), len(img.getbands()))
-        img2 = img.crop((400, 100, 800, 500))
-        img2.save("zoomed.jpeg")
+        img2 = img.crop((450, 100, 850, 500))
         gray = img2.convert("L")
-        print(f"New shape after slicing: ({gray.size[0]}, \
+        print(f"The shape of the image is: ({gray.size[0]},\
 {gray.size[1]}, {len(gray.getbands())}) or {gray.size}")
         print_tab(np.array(gray), gray.getbands())
-        gray.show()
+        transp = gray.transpose(Image.FLIP_LEFT_RIGHT)
+        tr = transp.transpose(Image.ROTATE_90)
+        print(f"New shape after Transpose: ({tr.size[0]}, {tr.size[1]})")
+        print_tab_row(np.array(tr))
 
     except AssertionError as error:
         print(f"AssertionError: {error}")
