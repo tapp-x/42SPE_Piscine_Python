@@ -2,6 +2,44 @@ import matplotlib.pyplot as plt
 from load_csv import load
 
 
+def format_data(data):
+    """
+    A function that format the data from the population_total.csv file
+    to be able to plot it in a line graph.
+    For each value in population, the function will transform the
+    'XM' format to X * 10^6.
+
+    Parameters:
+        data (list): The data to format.
+    """
+
+    for i in range(len(data)):
+        if data[i] == "NA":
+            data[i] = 0
+        else:
+            data[i] = float(data[i][:-1]) * 10**6
+
+    return data
+
+
+def reduce_size(years, pop_france, pop_belgium):
+    """
+    A function that reduce the size of the data to have a max years at 2050
+    Iterate over years until 2060 and cut the 2 pop list at the same size.
+    """
+
+    for i in range(len(years)):
+        if int(years[i]) == 2050:
+            years = years[:i+1]
+            break
+
+    length = len(years)
+    pop_france = pop_france[:length]
+    pop_belgium = pop_belgium[:length]
+
+    return years, pop_france, pop_belgium
+
+
 def main():
     """
     A program that load the data from the population_total.csv file
@@ -17,18 +55,20 @@ def main():
         years = france_data.columns[1:]
         france_population = france_data.values[0][1:]
         belgium_population = belgium_data.values[0][1:]
+        fr_pop = format_data(france_population)
+        belg_pop = format_data(belgium_population)
 
-        print(f"france_population: {france_population}")
-        print(f"belgium_population: {belgium_population}")
+        years, fr_pop, belg_pop = reduce_size(years, fr_pop, belg_pop)
 
-        plt.plot(years, france_population, label="France")
-        plt.plot(years, belgium_population, label="Belgium")
+        plt.plot(years, fr_pop, label="France")
+        plt.plot(years, belg_pop, label="Belgium")
         plt.xlabel("Years")
         plt.xticks(years[::40])
         plt.ylabel("Population")
-        plt.yticks(range(20, 101, 20))
+        plt.yticks([20 * 10**6, 40 * 10**6, 60 * 10**6], ['20M', '40M', '60M'])
         plt.title("Population Projection")
         plt.legend()
+        plt.legend(loc='lower right')
         plt.show()
 
     except AssertionError as error:
